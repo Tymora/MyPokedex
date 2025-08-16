@@ -76,7 +76,9 @@ fun PokemonBox(
             AsyncImage(
                 model = pokemon?.sprites?.other?.officialArtwork?.front_default,
                 contentDescription = pokemon?.name,
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .padding(bottom = 14.dp)
+                    .fillMaxSize(),
                 contentScale = ContentScale.FillBounds,
             )
             Box(

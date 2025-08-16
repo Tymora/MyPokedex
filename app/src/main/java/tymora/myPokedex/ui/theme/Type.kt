@@ -8,65 +8,65 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import tymora.myPokedex.R
 
-val Roboto = FontFamily(
-    Font(R.font.roboto_bold, weight = FontWeight.Bold),
-    Font(R.font.roboto_regular, weight = FontWeight.Normal)
+val Poppins = FontFamily(
+    Font(R.font.poppins_bold, weight = FontWeight.Bold),
+    Font(R.font.poppins_regular, weight = FontWeight.Normal)
 )
 
 
 val Typography = Typography(
     headlineMedium = TextStyle(
-        fontFamily = Roboto,
+        fontFamily = Poppins,
         fontWeight = FontWeight.Bold,
         fontSize = 24.sp,
         lineHeight = 32.sp,
     ),
 
-    bodyLarge = TextStyle(
-        fontFamily = Roboto,
+    bodyLarge = TextStyle(  //Subtitle 1
+        fontFamily = Poppins,
+        fontWeight = FontWeight.Bold,
+        fontSize = 16.sp,
+        lineHeight = 16.sp,
+    ),
+    bodyMedium = TextStyle( //Subtitle 2
+        fontFamily = Poppins,
         fontWeight = FontWeight.Bold,
         fontSize = 14.sp,
         lineHeight = 16.sp,
     ),
-    bodyMedium = TextStyle(
-        fontFamily = Roboto,
+    bodySmall = TextStyle( //Subtitle 3
+        fontFamily = Poppins,
         fontWeight = FontWeight.Bold,
         fontSize = 12.sp,
         lineHeight = 16.sp,
     ),
-    bodySmall = TextStyle(
-        fontFamily = Roboto,
-        fontWeight = FontWeight.Bold,
-        fontSize = 10.sp,
-        lineHeight = 16.sp,
+
+    labelLarge = TextStyle( //Body 1
+        fontFamily = Poppins,
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp,
+        lineHeight = 18.sp,
     ),
 
-    labelLarge = TextStyle(
-        fontFamily = Roboto,
+    labelMedium = TextStyle( //Body 2
+        fontFamily = Poppins,
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp,
         lineHeight = 16.sp,
     ),
 
-    labelMedium = TextStyle(
-        fontFamily = Roboto,
+    labelSmall = TextStyle( //Body 3
+        fontFamily = Poppins,
         fontWeight = FontWeight.Normal,
         fontSize = 12.sp,
         lineHeight = 16.sp,
     ),
 
-    labelSmall = TextStyle(
-        fontFamily = Roboto,
+    displaySmall = TextStyle( //Caption
+        fontFamily = Poppins,
         fontWeight = FontWeight.Normal,
-        fontSize = 10.sp,
-        lineHeight = 16.sp,
-    ),
-
-    displaySmall = TextStyle(
-        fontFamily = Roboto,
-        fontWeight = FontWeight.Normal,
-        fontSize = 8.sp,
-        lineHeight = 12.sp,
+        fontSize = 11.sp,
+        lineHeight = 14.sp
     ),
 
 
