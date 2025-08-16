@@ -6,5 +6,6 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "pokemon_brief")
 data class PokemonBriefEntity(
     @PrimaryKey val name: String,
-    val url: String
+    val url: String,
+    val position: Int
 )

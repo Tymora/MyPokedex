@@ -8,5 +8,4 @@ data class RemoteKeys(
     @PrimaryKey val label: String = "pokemon",
     val nextOffset: Int?,
     val prevOffset: Int? = null,
-    val lastUpdated: Long? = null
 )

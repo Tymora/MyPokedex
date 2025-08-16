@@ -10,7 +10,7 @@ import tymora.myPokedex.data.local.entity.PokemonBriefEntity
 import tymora.myPokedex.data.local.entity.RemoteKeys
 import tymora.myPokedex.data.mappers.toEntity
 import tymora.myPokedex.data.remote.PokedexApi
-import tymora.myPokedex.data.remote.model.PokemonBrief
+import kotlin.coroutines.cancellation.CancellationException
 
 
 @OptIn(ExperimentalPagingApi::class)
@@ -26,16 +26,26 @@ class PokemonRemoteMediator(
         val keysDao = db.remoteKeysDao()
         val dao = db.pokemonDao()
 
-        val limit = state.config.pageSize
+        val pageSize = state.config.pageSize
+
         val offset = when (loadType) {
             LoadType.REFRESH -> 0
             LoadType.PREPEND -> return MediatorResult.Success(endOfPaginationReached = true)
             LoadType.APPEND -> keysDao.get()?.nextOffset ?: 0
         }
 
-        val res = api.getAllPokemons(limit = limit, offset = offset) // DTO: results:[{name,url}]
-        val items = res.results.map { PokemonBrief(name = it.name, url = it.url).toEntity() }
-        val endReached = items.isEmpty()
+        val resp = api.getAllPokemons(limit = pageSize, offset = offset)
+        val list = resp.results
+
+        // позиция = глобальный индекс элемента в общей ленте
+        val items = list.mapIndexed { i, brief ->
+            brief.toEntity(position = offset + i)
+        }
+
+        val count = resp.count                       // если поле есть в твоей модели
+        val endReachedByNext = (resp.next == null)
+        val endReachedByCount = count != null && (offset + list.size >= count)
+        val endReached = endReachedByNext || endReachedByCount || items.isEmpty()
 
         db.withTransaction {
             if (loadType == LoadType.REFRESH) {
@@ -43,12 +53,15 @@ class PokemonRemoteMediator(
                 keysDao.delete()
             }
             dao.upsertAll(items)
-            val next = if (endReached) null else offset + limit
+            val next = if (endReached) null else offset + pageSize
             keysDao.upsert(RemoteKeys(nextOffset = next))
         }
 
         MediatorResult.Success(endOfPaginationReached = endReached)
+    } catch (e: CancellationException) {
+        throw e
     } catch (e: Exception) {
         MediatorResult.Error(e)
     }
 }
+
