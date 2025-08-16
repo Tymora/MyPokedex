@@ -1,5 +1,7 @@
 package tymora.myPokedex.ui.theme
 
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 
@@ -7,25 +9,50 @@ val RedPrimary = Color(0xFFDC0A2D)
 
 
 //Типы покемонов
-val Bug = Color(0xFFA7B723)
-val Dark = Color(0xFF75574C)
-val Dragon = Color(0xFF7037FF)
-val Electric = Color(0xFFF9CF30)
-val Fairy = Color(0xFFE69EAC)
-val Fighting = Color(0xFFC12239)
-val Fire = Color(0xFFF57D31)
-val Flying = Color(0xFFA891EC)
-val Ghost = Color(0xFF70559B)
-val Normal = Color(0xFFAAA67F)
-val Grass = Color(0xFF74CB48)
-val Ground = Color(0xFFDEC16B)
-val Ice = Color(0xFF9AD6DF)
-val Poison = Color(0xFFA43E9E)
-val Psychic = Color(0xFFFB5584)
-val Rock = Color(0xFFB69E31)
-val Steel = Color(0xFFB7B9D0)
-val Water = Color(0xFF6493EB)
 
+    val bug = Color(0xFFA7B723)
+    val dark = Color(0xFF75574C)
+    val dragon = Color(0xFF7037FF)
+    val electric = Color(0xFFF9CF30)
+    val fairy = Color(0xFFE69EAC)
+    val fighting = Color(0xFFC12239)
+    val fire = Color(0xFFF57D31)
+    val flying = Color(0xFFA891EC)
+    val ghost = Color(0xFF70559B)
+    val normal = Color(0xFFAAA67F)
+    val grass = Color(0xFF74CB48)
+    val ground = Color(0xFFDEC16B)
+    val ice = Color(0xFF9AD6DF)
+    val poison = Color(0xFFA43E9E)
+    val psychic = Color(0xFFFB5584)
+    val rock = Color(0xFFB69E31)
+    val steel = Color(0xFFB7B9D0)
+    val water = Color(0xFF6493EB)
+
+
+
+@Composable
+fun typeColor(name: String?): Color = when (name?.lowercase()) {
+    "bug" -> bug
+    "dark" -> dark
+    "dragon" -> dragon
+    "electric" -> electric
+    "fairy" -> fairy
+    "fighting" -> fighting
+    "fire" -> fire
+    "flying" -> flying
+    "ghost" -> ghost
+    "normal" -> normal
+    "grass" -> grass
+    "ground" -> ground
+    "ice" -> ice
+    "poison" -> poison
+    "psychic" -> psychic
+    "rock" -> rock
+    "steel" -> steel
+    "water" -> water
+    else -> MaterialTheme.colorScheme.primary
+}
 
 //Grayscale
 val Darker = Color(0xFF212121)

@@ -11,6 +11,7 @@ import tymora.myPokedex.data.remote.PokedexApi
 import tymora.myPokedex.data.repository.PokedexRepositoryImpl
 import tymora.myPokedex.domain.PokedexRepository
 import tymora.myPokedex.ui.viewmodel.ListPokemonsViewModel
+import tymora.myPokedex.ui.viewmodel.PokemonDetailsViewModel
 
 
 val appModule = module {
@@ -37,9 +38,8 @@ val appModule = module {
     }
 
 
-    viewModel {
-        ListPokemonsViewModel(get())
-    }
 
+    viewModel { ListPokemonsViewModel(get()) }
+    viewModel { PokemonDetailsViewModel(get()) }
 
 }

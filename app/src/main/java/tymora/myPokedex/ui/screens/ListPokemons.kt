@@ -56,7 +56,7 @@ fun ListPokemons(
         ) { innerPadding  ->
 
             Surface(
-                shape = RoundedCornerShape(16.dp),
+                shape = RoundedCornerShape(20.dp),
                 color = MaterialTheme.colorScheme.surface,
                 border = BorderStroke(8.dp, MaterialTheme.colorScheme.primary),
                 tonalElevation = 0.dp,
