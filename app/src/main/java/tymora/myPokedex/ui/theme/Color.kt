@@ -1,7 +1,5 @@
 package tymora.myPokedex.ui.theme
 
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 
@@ -30,29 +28,6 @@ val RedPrimary = Color(0xFFDC0A2D)
     val water = Color(0xFF6493EB)
 
 
-
-@Composable
-fun typeColor(name: String?): Color = when (name?.lowercase()) {
-    "bug" -> bug
-    "dark" -> dark
-    "dragon" -> dragon
-    "electric" -> electric
-    "fairy" -> fairy
-    "fighting" -> fighting
-    "fire" -> fire
-    "flying" -> flying
-    "ghost" -> ghost
-    "normal" -> normal
-    "grass" -> grass
-    "ground" -> ground
-    "ice" -> ice
-    "poison" -> poison
-    "psychic" -> psychic
-    "rock" -> rock
-    "steel" -> steel
-    "water" -> water
-    else -> MaterialTheme.colorScheme.primary
-}
 
 //Grayscale
 val Darker = Color(0xFF212121)

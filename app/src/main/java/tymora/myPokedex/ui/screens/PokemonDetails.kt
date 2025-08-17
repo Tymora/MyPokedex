@@ -3,14 +3,16 @@ package tymora.myPokedex.ui.screens
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -29,13 +31,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import org.koin.compose.viewmodel.koinViewModel
 import tymora.myPokedex.data.remote.model.pokemon.Pokemon
+import tymora.myPokedex.ui.components.TypePlate
+import tymora.myPokedex.ui.components.horizontalGradientBrush
 import tymora.myPokedex.ui.viewmodel.PokemonDetailsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,38 +54,45 @@ fun PokemonDetails(
 
     LaunchedEffect(pokemonName) {
         loading = true; error = null
-        runCatching { viewModel.detailPokemon(pokemonName) }
-            .onSuccess { pokemon = it }
+        runCatching { viewModel.detailPokemon(pokemonName) }.onSuccess { pokemon = it }
             .onFailure { error = it.message }
         loading = false
     }
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.primary)
+            .background(
+                horizontalGradientBrush(pokemon)
+            )
     ) {
         Scaffold(
             containerColor = Color.Transparent,
             contentWindowInsets = WindowInsets(4),
             topBar = {
                 TopAppBar(
-                    title = { Text(pokemon?.name    ?.replaceFirstChar { it.uppercase() } ?: "No name") },
+                    title = {
+                        Text(pokemon?.name?.replaceFirstChar { it.uppercase() }
+                            ?: "No name")
+                    },
                     navigationIcon = {
                         IconButton({ navController.popBackStack() }) {
-                            Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = "Назад", tint = MaterialTheme.colorScheme.onPrimary)
+                            Icon(
+                                Icons.AutoMirrored.Default.ArrowBack,
+                                contentDescription = "Назад",
+                                tint = MaterialTheme.colorScheme.onPrimary
+                            )
                         }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
+                        containerColor = Color.Transparent,
                         titleContentColor = MaterialTheme.colorScheme.onPrimary
                     ),
                 )
-            }
-        ) { innerPadding ->
+            }) { innerPadding ->
             Surface(
                 shape = RoundedCornerShape(24.dp),
                 color = MaterialTheme.colorScheme.surface,
-                border = BorderStroke(8.dp, MaterialTheme.colorScheme.primary),
+                border = BorderStroke(8.dp, horizontalGradientBrush(pokemon)),
                 tonalElevation = 0.dp,
                 shadowElevation = 0.dp,
                 modifier = Modifier
@@ -91,13 +101,26 @@ fun PokemonDetails(
 
                     .fillMaxSize()
             ) {
-                Box (contentAlignment = Alignment.TopCenter){
-                AsyncImage(
-                    model = pokemon?.sprites?.other?.officialArtwork?.front_default,
-                    contentDescription = pokemon?.name,
-                    contentScale = ContentScale.FillBounds,
-                )
-            }}
+                Box(contentAlignment = Alignment.Center) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        pokemon?.types.orEmpty().sortedBy { it.slot }.forEach { entry ->
+                            TypePlate(entry.type.name)
+                        }
+                    }
+                }
+                Box(contentAlignment = Alignment.TopCenter) {
+                    AsyncImage(
+                        model = pokemon?.sprites?.other?.officialArtwork?.front_default,
+                        contentDescription = pokemon?.name,
+                        contentScale = ContentScale.FillBounds,
+                        modifier = Modifier.size(400.dp)
+                    )
+                    Spacer(modifier = Modifier.padding(4.dp))
+
+                }
+            }
 
         }
     }
