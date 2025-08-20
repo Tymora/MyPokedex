@@ -7,7 +7,6 @@ import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import tymora.myPokedex.data.local.AppDatabase
 import tymora.myPokedex.data.local.entity.PokemonBriefEntity
-import tymora.myPokedex.data.local.entity.RemoteKeys
 import tymora.myPokedex.data.mappers.toEntity
 import tymora.myPokedex.data.remote.PokedexApi
 import kotlin.coroutines.cancellation.CancellationException
@@ -23,7 +22,6 @@ class PokemonRemoteMediator(
         loadType: LoadType,
         state: PagingState<Int, PokemonBriefEntity>
     ): MediatorResult = try {
-        val keysDao = db.remoteKeysDao()
         val dao = db.pokemonDao()
 
         val pageSize = state.config.pageSize
@@ -31,7 +29,7 @@ class PokemonRemoteMediator(
         val offset = when (loadType) {
             LoadType.REFRESH -> 0
             LoadType.PREPEND -> return MediatorResult.Success(endOfPaginationReached = true)
-            LoadType.APPEND -> keysDao.get()?.nextOffset ?: 0
+            LoadType.APPEND -> dao.lastPosition()?.plus( 1 ) ?: 0
         }
 
         val resp = api.getAllPokemons(limit = pageSize, offset = offset)
@@ -50,11 +48,9 @@ class PokemonRemoteMediator(
         db.withTransaction {
             if (loadType == LoadType.REFRESH) {
                 dao.clearAll()
-                keysDao.delete()
             }
             dao.upsertAll(items)
-            val next = if (endReached) null else offset + pageSize
-            keysDao.upsert(RemoteKeys(nextOffset = next))
+
         }
 
         MediatorResult.Success(endOfPaginationReached = endReached)

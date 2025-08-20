@@ -15,6 +15,9 @@ interface PokemonDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertAll(items: List<PokemonBriefEntity>)
 
+    @Query("SELECT MAX(position) FROM pokemon_brief")
+    suspend fun lastPosition(): Int?
+
     @Query("DELETE FROM pokemon_brief")
     suspend fun clearAll()
 }

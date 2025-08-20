@@ -9,12 +9,12 @@ import tymora.myPokedex.data.local.entity.MiniDataPokemonEntity
 
 @Dao
 interface MiniDataDao {
-    @Query("SELECT * FROM mini_data_pokemon ORDER BY name ASC")
-    fun getMiniData(): MiniDataPokemonEntity
+    @Query("SELECT * FROM mini_data_pokemon WHERE name = :name LIMIT 1")
+    suspend fun getMiniData(name: String): MiniDataPokemonEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsertAll(items: List<MiniDataPokemonEntity>)
+    suspend fun upsert(item: MiniDataPokemonEntity)
 
-    @Query("DELETE FROM pokemon_brief")
+    @Query("DELETE FROM mini_data_pokemon")
     suspend fun clearAll()
 }
