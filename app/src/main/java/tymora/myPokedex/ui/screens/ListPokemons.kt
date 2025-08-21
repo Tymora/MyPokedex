@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -18,11 +19,15 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import org.koin.compose.viewmodel.koinViewModel
 import tymora.myPokedex.ui.components.PokemonBox
@@ -35,6 +40,8 @@ fun ListPokemons(
     viewModel: ListPokemonsViewModel = koinViewModel(),
 ) {
     val pokemons = viewModel.pokemons.collectAsLazyPagingItems()
+    val refreshing = pokemons.loadState.refresh is LoadState.Loading
+    val pullState = rememberPullToRefreshState()
 
     Box(
         modifier = Modifier
@@ -53,7 +60,7 @@ fun ListPokemons(
                     ),
                 )
             }
-        ) { innerPadding  ->
+        ) { innerPadding ->
 
             Surface(
                 shape = RoundedCornerShape(24.dp),
@@ -62,36 +69,54 @@ fun ListPokemons(
                 tonalElevation = 0.dp,
                 shadowElevation = 0.dp,
                 modifier = Modifier
-
                     .padding(innerPadding)
-
                     .fillMaxSize()
             ) {
-                if (pokemons.itemCount > 0) {
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(2),
-                        modifier = Modifier.padding(top = 12.dp),
-                        contentPadding = PaddingValues(12.dp),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        items(
-                            count = pokemons.itemCount,
-                            key = { idx -> pokemons[idx]?.name ?: idx }
-                        ) { idx ->
-                            val brief = pokemons[idx]
-                            if (brief != null) {
-                                PokemonBox(
-                                    pokemonBrief = brief,
-                                    viewModel = viewModel,
-                                    onClick = { navController.navigate("details/${brief.name}") }
+                PullToRefreshBox(
+                    isRefreshing = refreshing,
+                    onRefresh = { pokemons.refresh() },
+                    state = pullState
+                ) {
+                    Box(Modifier.fillMaxSize()) {
+                        when {
+                            pokemons.loadState.refresh is LoadState.Error && pokemons.itemCount == 0 -> {
+                                val error = (pokemons.loadState.refresh as LoadState.Error).error
+                                Text(
+                                    text = error.localizedMessage ?: "Error",
+                                    color = MaterialTheme.colorScheme.error,
+                                    modifier = Modifier.align(Alignment.Center)
                                 )
+                            }
+                            pokemons.itemCount > 0 -> {
+                                LazyVerticalGrid(
+                                    columns = GridCells.Fixed(2),
+                                    modifier = Modifier.padding(top = 12.dp),
+                                    contentPadding = PaddingValues(12.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                                ) {
+                                    items(
+                                        count = pokemons.itemCount,
+                                        key = { idx -> pokemons[idx]?.name ?: idx }
+                                    ) { idx ->
+                                        val brief = pokemons[idx]
+                                        if (brief != null) {
+                                            PokemonBox(
+                                                pokemonBrief = brief,
+                                                viewModel = viewModel,
+                                                onClick = { navController.navigate("details/${brief.name}") }
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                            else -> {
+                                CircularProgressIndicator(Modifier.align(Alignment.Center))
                             }
                         }
                     }
                 }
             }
         }
-
     }
 }

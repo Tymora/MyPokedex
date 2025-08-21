@@ -7,9 +7,8 @@ junitVersion = "1.3.0"
 espressoCore = "3.7.0"
 lifecycleRuntimeKtx = "2.9.2"
 activityCompose = "1.10.1"
-composeBom = "2024.09.00"
+composeBom = "2025.08.00"
 okhttp = "5.1.0"
-swiperefreshlayout = "1.1.0"
 paging = "3.3.6"
 koin = "4.1.0"
 coil-version = "2.7.0"
@@ -39,7 +38,6 @@ koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
 
 #UI
-swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "swiperefreshlayout" }
 paging-runtime-ktx = { module = "androidx.paging:paging-runtime-ktx", version.ref = "paging" }
 paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging" }
 
@@ -67,4 +65,4 @@ coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coi
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-ksp = { id = "com.google.devtools.ksp", version = "2.2.20-Beta2-2.0.2" }
+ksp = { id = "com.google.devtools.ksp", version = "2.2.10-2.0.2" }
