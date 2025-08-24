@@ -5,12 +5,13 @@ plugins {
     alias(libs.plugins.ksp)
 
 }
+
 tasks.withType<Test>().configureEach {
     useJUnitPlatform()
-    val agent = configurations.getByName("byteBuddyAgent").resolve().single()
-    jvmArgs("-javaagent=${agent.absolutePath}")
+    jvmArgs("-XX:+EnableDynamicAgentLoading")
+    reports.html.required.set(true)
+    reports.junitXml.required.set(true)
 }
-
 android {
     namespace = "tymora.myPokedex"
     compileSdk = 36
@@ -44,16 +45,9 @@ android {
     buildFeatures {
         compose = true
     }
-    testOptions {
-        unitTests.all {
-            it.useJUnitPlatform()
-            val agent = configurations.getByName("byteBuddyAgent").resolve().single()
-            it.jvmArgs("-javaagent=${agent.absolutePath}")
-        }
-    }
 }
 
-val byteBuddyAgent by configurations.creating
+
 
 dependencies {
 
@@ -77,7 +71,6 @@ dependencies {
     testRuntimeOnly(libs.junit.platform.launcher)
     testRuntimeOnly(libs.junit.jupiter.engine)
     testImplementation(libs.junit.jupiter.params)
-    byteBuddyAgent(libs.byte.buddy.agent)
     testImplementation(libs.mockk)
     testImplementation(libs.kotlinx.coroutines.test)
 
