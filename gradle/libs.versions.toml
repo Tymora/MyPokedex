@@ -19,6 +19,7 @@ coroutines = "1.10.2"
 jupiter = "5.13.4"
 mockk = "1.14.5"
 coroutinesTest = "1.10.2"
+bytebuddy = "1.15.11"
 junit-launcher = "1.13.4"
 
 [libraries]
@@ -42,6 +43,8 @@ junit-jupiter-engine = { group = "org.junit.jupiter", name = "junit-jupiter-engi
 junit-jupiter-params = { group = "org.junit.jupiter", name = "junit-jupiter-params", version.ref = "jupiter" }
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutinesTest" }
+byte-buddy-agent = { group = "net.bytebuddy", name = "byte-buddy-agent", version.ref = "bytebuddy" }
+
 
 #DI
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }

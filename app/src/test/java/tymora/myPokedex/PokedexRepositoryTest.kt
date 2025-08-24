@@ -19,6 +19,7 @@ import tymora.myPokedex.data.remote.PokedexApi
 import tymora.myPokedex.data.repository.PokedexRepositoryImpl
 import tymora.myPokedex.domain.PokedexRepository
 
+@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
 class PokedexRepositoryTest {
 
     private lateinit var api: PokedexApi
