@@ -32,10 +32,14 @@ class ListPokemonsViewModel(
     fun miniFlow(name: String): Flow<MiniDataPokemon?> =
         _minis.map { it[name] }.distinctUntilChanged()
 
-    private val _miniErrors = MutableSharedFlow<Pair<String, Throwable>>(replay = 0, extraBufferCapacity = 1)
+    private val _miniErrors =
+        MutableSharedFlow<Pair<String, Throwable>>(replay = 0, extraBufferCapacity = 1)
+    val miniErrors: Flow<Pair<String, Throwable>> = _miniErrors
 
     private val inFlight = mutableMapOf<String, Deferred<MiniDataPokemon>>()
     private val flightMutex = Mutex()
+
+
 
     fun loadMiniInfo(name: String) {
         viewModelScope.launch {
