@@ -34,7 +34,7 @@ fun PokemonBox(
     onClick: () -> Unit
 ) {
     val name = pokemonBrief.name
-    val pokemon by viewModel.miniFlow(name).collectAsState()
+    val pokemon by viewModel.miniFlow(name).collectAsState(initial = null)
 
     LaunchedEffect(pokemonBrief.name) {
         viewModel.loadMiniInfo(pokemonBrief.name)

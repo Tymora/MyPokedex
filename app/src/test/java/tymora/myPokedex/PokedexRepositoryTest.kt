@@ -18,6 +18,9 @@ import tymora.myPokedex.data.local.entity.MiniDataPokemonEntity
 import tymora.myPokedex.data.remote.PokedexApi
 import tymora.myPokedex.data.repository.PokedexRepositoryImpl
 import tymora.myPokedex.domain.PokedexRepository
+import tymora.myPokedex.data.mappers.toEntity
+import tymora.myPokedex.data.remote.model.MiniDataPokemon
+
 
 @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
 class PokedexRepositoryTest {
@@ -62,6 +65,30 @@ class PokedexRepositoryTest {
         assertEquals("pikachu", result.name)
         coVerify(exactly = 1) { dao.getMiniData("pikachu") }
         coVerify(exactly = 0) { api.getMiniDataPokemon(any()) }
+        confirmVerified(api, dao)
+    }
+
+    @Test
+    fun `getMiniInfo fetches from API and caches result when no local data`() = runTest {
+        // arrange
+        coEvery { dao.getMiniData("pikachu") } returns null
+        val remote = MiniDataPokemon(
+            id = 25,
+            name = "pikachu",
+            sprites = mockk(relaxed = true),
+            types = emptyList(),
+        )
+        coEvery { api.getMiniDataPokemon("pikachu") } returns remote
+        coEvery { dao.upsert(remote.toEntity()) } returns Unit
+
+        // act
+        val result = repo.getMiniInfo("pikachu")
+
+        // assert
+        assertEquals(remote, result)
+        coVerify(exactly = 1) { dao.getMiniData("pikachu") }
+        coVerify(exactly = 1) { api.getMiniDataPokemon("pikachu") }
+        coVerify(exactly = 1) { dao.upsert(remote.toEntity()) }
         confirmVerified(api, dao)
     }
 
