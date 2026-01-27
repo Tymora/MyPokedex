@@ -15,5 +15,4 @@ import tymora.myPokedex.data.local.entity.MiniDataPokemonEntity
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun pokemonDao(): PokemonDao
-    abstract fun miniDataDao(): MiniDataDao
 }

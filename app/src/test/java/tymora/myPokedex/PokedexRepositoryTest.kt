@@ -2,24 +2,16 @@ package tymora.myPokedex
 
 import io.mockk.clearAllMocks
 import io.mockk.mockk
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.confirmVerified
-import io.mockk.every
 import io.mockk.unmockkAll
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import tymora.myPokedex.data.local.AppDatabase
-import tymora.myPokedex.data.local.MiniDataDao
 import tymora.myPokedex.data.local.entity.MiniDataPokemonEntity
 import tymora.myPokedex.data.remote.PokedexApi
 import tymora.myPokedex.data.repository.PokedexRepositoryImpl
 import tymora.myPokedex.domain.PokedexRepository
-import tymora.myPokedex.data.mappers.toEntity
-import tymora.myPokedex.data.remote.model.MiniDataPokemon
 
 
 @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
@@ -28,14 +20,11 @@ class PokedexRepositoryTest {
     private lateinit var api: PokedexApi
     private lateinit var db: AppDatabase
     private lateinit var repo: PokedexRepository
-    private lateinit var dao: MiniDataDao
 
     @BeforeEach
     fun setUp() {
         api = mockk()
         db = mockk()
-        dao = mockk()
-        every { db.miniDataDao() } returns dao
         repo = PokedexRepositoryImpl(api, db)
     }
 
@@ -55,41 +44,6 @@ class PokedexRepositoryTest {
             sprites = mockk(relaxed = true),
             types = emptyList(),
         )
-        coEvery { dao.getMiniData("pikachu") } returns cached
 
-        // act
-        val result = repo.getMiniInfo("pikachu")
 
-        // assert
-        assertEquals(25, result.id)
-        assertEquals("pikachu", result.name)
-        coVerify(exactly = 1) { dao.getMiniData("pikachu") }
-        coVerify(exactly = 0) { api.getMiniDataPokemon(any()) }
-        confirmVerified(api, dao)
-    }
-
-    @Test
-    fun `getMiniInfo fetches from API and caches result when no local data`() = runTest {
-        // arrange
-        coEvery { dao.getMiniData("pikachu") } returns null
-        val remote = MiniDataPokemon(
-            id = 25,
-            name = "pikachu",
-            sprites = mockk(relaxed = true),
-            types = emptyList(),
-        )
-        coEvery { api.getMiniDataPokemon("pikachu") } returns remote
-        coEvery { dao.upsert(remote.toEntity()) } returns Unit
-
-        // act
-        val result = repo.getMiniInfo("pikachu")
-
-        // assert
-        assertEquals(remote, result)
-        coVerify(exactly = 1) { dao.getMiniData("pikachu") }
-        coVerify(exactly = 1) { api.getMiniDataPokemon("pikachu") }
-        coVerify(exactly = 1) { dao.upsert(remote.toEntity()) }
-        confirmVerified(api, dao)
-    }
-
-}
+}}

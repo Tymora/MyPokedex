@@ -15,30 +15,22 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import tymora.myPokedex.data.remote.model.PokemonBrief
-import tymora.myPokedex.ui.viewmodel.ListPokemonsViewModel
 
 
 @Composable
 fun PokemonBox(
     pokemonBrief: PokemonBrief,
-    viewModel: ListPokemonsViewModel,
     onClick: () -> Unit
 ) {
     val name = pokemonBrief.name
-    val pokemon by viewModel.miniFlow(name).collectAsState(initial = null)
+    val id = pokemonBrief.url.trimEnd('/').substringAfterLast('/').toInt()
 
-    LaunchedEffect(pokemonBrief.name) {
-        viewModel.loadMiniInfo(pokemonBrief.name)
-    }
 
     Card(
         shape = RoundedCornerShape(16.dp),
@@ -65,7 +57,7 @@ fun PokemonBox(
 
 
             Text(
-                text = "#${pokemon?.id ?: "..."}",
+                text = "#${id}",
                 style = MaterialTheme.typography.displaySmall,
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier
@@ -74,8 +66,9 @@ fun PokemonBox(
             )
 
             AsyncImage(
-                model = pokemon?.sprites?.other?.officialArtwork?.front_default,
-                contentDescription = pokemon?.name,
+                //model = pokemon?.sprites?.other?.officialArtwork?.front_default,
+                model = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$id.png",
+                contentDescription = name,
                 modifier = Modifier
                     .padding(bottom = 14.dp)
                     .fillMaxSize(),

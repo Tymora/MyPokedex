@@ -103,7 +103,6 @@ fun ListPokemons(
                                         if (brief != null) {
                                             PokemonBox(
                                                 pokemonBrief = brief,
-                                                viewModel = viewModel,
                                                 onClick = { navController.navigate("details/${brief.name}") }
                                             )
                                         }

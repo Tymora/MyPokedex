@@ -10,10 +10,8 @@ import kotlinx.coroutines.flow.map
 import tymora.myPokedex.data.PokemonRemoteMediator
 import tymora.myPokedex.data.local.AppDatabase
 import tymora.myPokedex.data.remote.PokedexApi
-import tymora.myPokedex.data.remote.model.MiniDataPokemon
 import tymora.myPokedex.domain.PokedexRepository
 import tymora.myPokedex.data.mappers.toDomain
-import tymora.myPokedex.data.mappers.toEntity
 import tymora.myPokedex.data.remote.model.PokemonBrief
 
 
@@ -32,11 +30,4 @@ class PokedexRepositoryImpl(
             .map { pagingData ->
                 pagingData.map { entity -> entity.toDomain() }
             }
-    override suspend fun getMiniInfo(name: String): MiniDataPokemon {
-        val dao = db.miniDataDao()
-        dao.getMiniData(name)?.let { return it.toDomain() }
-        val remote = api.getMiniDataPokemon(name)
-        dao.upsert(remote.toEntity())
-        return remote
-    }
 }

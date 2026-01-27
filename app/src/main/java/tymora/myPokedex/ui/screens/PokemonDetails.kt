@@ -124,7 +124,7 @@ fun PokemonDetails(
                         contentAlignment = Alignment.TopCenter
                     ) {
                         AsyncImage(
-                            model = pokemon?.sprites?.other?.officialArtwork?.front_default,
+                            model = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon?.id}.png",
                             contentDescription = pokemon?.name,
                             contentScale = ContentScale.FillBounds,
                             modifier = Modifier.size(400.dp)
