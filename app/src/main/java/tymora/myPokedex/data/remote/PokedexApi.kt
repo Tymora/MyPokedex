@@ -4,7 +4,6 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 import tymora.myPokedex.data.remote.model.AllPokemons
-import tymora.myPokedex.data.remote.model.MiniDataPokemon
 import tymora.myPokedex.data.remote.model.pokemon.Pokemon
 
 interface PokedexApi{
@@ -19,8 +18,5 @@ interface PokedexApi{
         @Path("name") name: String?
     ): Pokemon
 
-    @GET("pokemon/{name}")
-     suspend fun getMiniDataPokemon(
-        @Path("name") name: String
-    ): MiniDataPokemon
+
 }

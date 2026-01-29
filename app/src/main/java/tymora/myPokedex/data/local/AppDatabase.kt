@@ -4,12 +4,11 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import tymora.myPokedex.data.local.entity.PokemonBriefEntity
-import tymora.myPokedex.data.local.entity.MiniDataPokemonEntity
 
 
 @Database(
-    entities = [PokemonBriefEntity::class, MiniDataPokemonEntity::class],
-    version = 5,
+    entities = [PokemonBriefEntity::class],
+    version = 6,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
