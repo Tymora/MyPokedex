@@ -12,7 +12,9 @@ import tymora.myPokedex.data.local.AppDatabase
 import tymora.myPokedex.data.remote.PokedexApi
 import tymora.myPokedex.domain.PokedexRepository
 import tymora.myPokedex.data.mappers.toDomain
+import tymora.myPokedex.data.mappers.toEntity
 import tymora.myPokedex.data.remote.model.PokemonBrief
+import tymora.myPokedex.data.remote.model.pokemon.Pokemon
 
 
 class PokedexRepositoryImpl(
@@ -30,4 +32,12 @@ class PokedexRepositoryImpl(
             .map { pagingData ->
                 pagingData.map { entity -> entity.toDomain() }
             }
+
+    override suspend fun getPokemonDetails(id: Int): Pokemon {
+        db.pokemonDetailsDao().getById(id)?.let {  cached -> return cached.toDomain() }
+        val remote = api.getPokemonById(id)
+        val entity = remote.toEntity()
+        db.pokemonDetailsDao().upsert(entity)
+        return remote
+    }
 }

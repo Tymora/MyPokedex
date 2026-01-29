@@ -7,6 +7,5 @@ import androidx.room.PrimaryKey
 data class PokemonBriefEntity(
     @PrimaryKey val id: Int,
     val name: String,
-    val url: String,
     val position: Int
 )

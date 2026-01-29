@@ -29,8 +29,6 @@ fun PokemonBox(
     onClick: () -> Unit
 ) {
     val name = pokemonBrief.name
-    val id = pokemonBrief.url.trimEnd('/').substringAfterLast('/').toInt()
-
 
     Card(
         shape = RoundedCornerShape(16.dp),
@@ -57,7 +55,7 @@ fun PokemonBox(
 
 
             Text(
-                text = "#${id}",
+                text = "#${pokemonBrief.id}",
                 style = MaterialTheme.typography.displaySmall,
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier
@@ -67,7 +65,7 @@ fun PokemonBox(
 
             AsyncImage(
                 //model = pokemon?.sprites?.other?.officialArtwork?.front_default,
-                model = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$id.png",
+                model = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonBrief.id}.png",
                 contentDescription = name,
                 modifier = Modifier
                     .padding(bottom = 14.dp)

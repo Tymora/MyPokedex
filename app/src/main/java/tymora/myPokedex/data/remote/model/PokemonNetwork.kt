@@ -1,6 +1,6 @@
 package tymora.myPokedex.data.remote.model
 
-data class PokemonBrief(
-    val id: Int,
+data class PokemonNetwork(
     val name: String,
-)
+    val url: String
+    )

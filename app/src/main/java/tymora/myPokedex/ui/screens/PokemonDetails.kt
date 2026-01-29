@@ -56,16 +56,17 @@ import tymora.myPokedex.R
 @Composable
 fun PokemonDetails(
     navController: NavController,
-    pokemonName: String?,
+    pokemonId: Int,
     viewModel: PokemonDetailsViewModel = koinViewModel()
 ) {
     var pokemon by remember { mutableStateOf<Pokemon?>(null) }
     var error by remember { mutableStateOf<String?>(null) }
     var loading by remember { mutableStateOf(true) }
 
-    LaunchedEffect(pokemonName) {
+    LaunchedEffect(pokemonId) {
+        android.util.Log.d("DETAILS", "open details, pokemonId=$pokemonId")
         loading = true; error = null
-        runCatching { viewModel.detailPokemon(pokemonName) }
+        runCatching { viewModel.detailPokemon(pokemonId) }
             .onSuccess { pokemon = it }
             .onFailure { error = it.message }
         loading = false

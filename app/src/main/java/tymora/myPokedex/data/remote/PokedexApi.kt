@@ -9,7 +9,7 @@ import tymora.myPokedex.data.remote.model.pokemon.Pokemon
 interface PokedexApi{
     @GET("pokemon")
     suspend fun getAllPokemons(
-        @Query("limit") limit: Int = 20, //20 покемонов  за один запрос.
+        @Query("limit") limit: Int = 20, // 20 покемонов  за один запрос.
         @Query("offset") offset: Int
     ): AllPokemons
 
@@ -18,5 +18,9 @@ interface PokedexApi{
         @Path("name") name: String?
     ): Pokemon
 
+    @GET("pokemon/{id}")
+    suspend fun getPokemonById(
+        @Path("id") id: Int
+    ): Pokemon
 
 }

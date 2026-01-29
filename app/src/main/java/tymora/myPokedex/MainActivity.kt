@@ -29,15 +29,16 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable(
-                        route = "details/{name}",
+                        route = "details/{id}",
                         arguments = listOf(
-                            navArgument("name") { type = NavType.StringType }
+                            navArgument("id") { type = NavType.IntType }
                         )
                     ) { backStackEntry ->
-                        val name = backStackEntry.arguments?.getString("name")
+                        val id = backStackEntry.arguments?.getInt("id")
+                            ?: return@composable
                         PokemonDetails(
                             navController = navController,
-                            pokemonName = name
+                            pokemonId = id
                         )
                     }
                 }

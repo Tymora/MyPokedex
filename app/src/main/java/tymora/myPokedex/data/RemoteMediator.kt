@@ -10,6 +10,7 @@ import tymora.myPokedex.data.local.entity.PokemonBriefEntity
 import tymora.myPokedex.data.mappers.toEntity
 import tymora.myPokedex.data.remote.PokedexApi
 import kotlin.coroutines.cancellation.CancellationException
+import tymora.myPokedex.data.mappers.toDomain
 
 
 @OptIn(ExperimentalPagingApi::class)
@@ -33,17 +34,15 @@ class PokemonRemoteMediator(
         }
 
         val resp = api.getAllPokemons(limit = pageSize, offset = offset)
-        val list = resp.results
 
         // позиция = глобальный индекс элемента в общей ленте
-        val items = list.mapIndexed { i, brief ->
-            brief.toEntity(position = offset + i)
-        }
+        val items = resp.results
+            .map { it.toDomain() } // PokemonBriefNetwork -> PokemonBrief
+            .mapIndexed { i, brief ->
+                brief.toEntity(position = offset + i) // PokemonBrief -> Entity
+            }
 
-        val count = resp.count                       // если поле есть в твоей модели
-        val endReachedByNext = (resp.next == null)
-        val endReachedByCount = count != null && (offset + list.size >= count)
-        val endReached = endReachedByNext || endReachedByCount || items.isEmpty()
+        val endReached = resp.next == null || items.isEmpty()
 
         db.withTransaction {
             if (loadType == LoadType.REFRESH) {
