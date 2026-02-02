@@ -18,8 +18,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import tymora.myPokedex.data.remote.model.PokemonBrief
 
 
@@ -29,6 +31,7 @@ fun PokemonBox(
     onClick: () -> Unit
 ) {
     val name = pokemonBrief.name
+    val context = LocalContext.current
 
     Card(
         shape = RoundedCornerShape(16.dp),
@@ -64,13 +67,16 @@ fun PokemonBox(
             )
 
             AsyncImage(
-                //model = pokemon?.sprites?.other?.officialArtwork?.front_default,
-                model = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonBrief.id}.png",
+                model = ImageRequest.Builder(context)
+                    .data("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonBrief.id}.png")
+                    .size(128)
+                    .crossfade(true) //Плавное появление
+                    .build(),
                 contentDescription = name,
                 modifier = Modifier
                     .padding(bottom = 14.dp)
                     .fillMaxSize(),
-                contentScale = ContentScale.FillBounds,
+                contentScale = ContentScale.Crop
             )
             Box(
                 modifier = Modifier

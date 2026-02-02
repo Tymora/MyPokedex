@@ -34,7 +34,9 @@ class PokedexRepositoryImpl(
             }
 
     override suspend fun getPokemonDetails(id: Int): Pokemon {
-        db.pokemonDetailsDao().getById(id)?.let {  cached -> return cached.toDomain() }
+        db.pokemonDetailsDao().getById(id)?.let { cached ->
+            return cached.toDomain()
+        }
         val remote = api.getPokemonById(id)
         val entity = remote.toEntity()
         db.pokemonDetailsDao().upsert(entity)
